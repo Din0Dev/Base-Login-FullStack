@@ -1,10 +1,26 @@
 import { useCallback, useState } from "react";
 import axios from "axios";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-
+import { NextPageContext } from "next";
 import Input from "@/components/input";
+
+export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}
 
 const Auth = () => {
   //! State
@@ -49,12 +65,8 @@ const Auth = () => {
 
   //! Render
   return (
-    <div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
+    <div className="relative h-full w-full bg-[url('/images/bg.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
       <div className="bg-black w-full h-full lg:bg-opacity-50">
-        {/* LOGO */}
-        <nav className="px-12 py-6">
-          <img src="/images/logo.png" alt="Logo" className="h-11" />
-        </nav>
         {/* FORM */}
         <div className="flex justify-center">
           <div className="bg-black bg-opacity-70 px-16 py-16 self-center mt-2 lg:w-2/5 lg:max-w-md rounded-md w-full">
